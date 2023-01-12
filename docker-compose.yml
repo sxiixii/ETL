@@ -11,11 +11,14 @@ services:
       - etl/.env
     networks:
       - db
+    ports:
+      - "5432:5432"
+
   etl:
     build: .
     container_name: etl
     volumes:
-      - etl_state:/opt/state/
+      - etl_state:/state/
     depends_on:
       - db
     env_file:

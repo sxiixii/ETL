@@ -22,7 +22,7 @@ class FilmWork(BaseModel):
     writers: List[Person]
 
 
-class Transformer:
+class FilmTransformer:
     def __init__(self, data: list[list]) -> None:
         self.data = data
 

@@ -18,7 +18,7 @@ class BaseStorage:
 
 class JsonFileStorage(BaseStorage):
     """
-    Файлы состояний хранятся в папке 'storage'. Класс принимает имя файла,
+    Файлы состояний хранятся в папке 'state' в корне проекта. Класс принимает имя файла,
     если такой файл не существует, то он будет создан.
     """
 
@@ -27,8 +27,7 @@ class JsonFileStorage(BaseStorage):
 
     def get_file_path(self):
         current_path = Path.cwd()
-        parent = current_path.parent
-        return Path(parent, 'state', self.file_name + '.json')
+        return Path(current_path, 'state', self.file_name + '.json')
 
     def get_file(self):
         file_path = self.get_file_path()
