@@ -19,8 +19,8 @@ es = Elasticsearch(environ.get('ES_HOST'))
 @es_backoff(start_sleep_time=0.5, factor=2, border_sleep_time=10)
 def create_index(index_name: str, index_body: str):
     if not es.indices.exists(index=index_name):
-        response = es.indices.create(index=index_name, body=index_body)
-        log.info('Create index: ', response)
+        es.indices.create(index=index_name, body=index_body)
+        log.info(f'Create index: {index_name}')
 
 
 @es_backoff(start_sleep_time=0.5, factor=2, border_sleep_time=10)
