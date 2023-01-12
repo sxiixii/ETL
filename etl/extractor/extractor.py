@@ -24,7 +24,6 @@ CHUNK_SIZE = int(environ.get('CHUNK_SIZE'))
 
 
 @contextmanager
-@pg_backoff(start_sleep_time=2, factor=2, border_sleep_time=10)
 def open_postgresql_db(dsl: dict):
     conn = psycopg2.connect(**dsl, cursor_factory=DictCursor)
     try:

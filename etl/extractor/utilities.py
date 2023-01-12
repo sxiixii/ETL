@@ -2,7 +2,7 @@ import time
 from functools import wraps
 
 from etl_logger import log
-from psycopg2 import OperationalError
+from psycopg2 import OperationalError, InterfaceError
 
 
 def pg_backoff(start_sleep_time=0.1, factor=2, border_sleep_time=10):
@@ -10,9 +10,8 @@ def pg_backoff(start_sleep_time=0.1, factor=2, border_sleep_time=10):
         @wraps(func)
         def inner(*args, **kwargs):
             try:
-                value = func(*args, **kwargs)
-                return value
-            except OperationalError:
+                return func(*args, **kwargs)
+            except (OperationalError, InterfaceError) as e:
                 log.error('Connection lost. Trying to connect...')
                 time_to_sleep = start_sleep_time
                 is_connected = False
@@ -24,7 +23,7 @@ def pg_backoff(start_sleep_time=0.1, factor=2, border_sleep_time=10):
                         is_connected = True
                         log.debug('Connected to DB!')
                         return value
-                    except OperationalError:
+                    except (OperationalError, InterfaceError) as e:
                         log.error(f'Connection lost. Trying to connect a {n} time.')
                         time_to_sleep = start_sleep_time * factor**n
                         if time_to_sleep > border_sleep_time:
