@@ -50,4 +50,4 @@ class ESLoader:
                     log.error('An error occurred while loading: ', info)
                 else:
                     last_extracted = datetime.now()
-                    self.state.set_state('last_extracted', last_extracted.strftime('%Y-%m-%d %H:%M:%S'))
+                    self.state.set_state('last_checked', last_extracted.strftime('%Y-%m-%d %H:%M:%S'))

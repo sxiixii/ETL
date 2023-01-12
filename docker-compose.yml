@@ -11,8 +11,6 @@ services:
       - etl/.env
     networks:
       - db
-    ports:
-      - "5432:5432"
 
   etl:
     build: .

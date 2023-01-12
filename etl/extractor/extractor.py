@@ -53,7 +53,7 @@ class PostgresExtractor:
                 break
 
     def get_query(self):
-        last_extracted = self.state.get_state('last_extracted')
+        last_extracted = self.state.get_state('last_checked')
         if last_extracted is None:
             last_extracted = datetime.now()
             return self.query % '< %s', last_extracted.strftime('%Y-%m-%d %H:%M:%S')
