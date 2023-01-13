@@ -9,10 +9,14 @@ from storage import JsonFileStorage, State
 
 from .extractor import PostgresExtractor, dsl, open_postgresql_db, INDEX_AND_TABLES
 from .extractor.utilities import pg_backoff
-from .loader import ESLoader, create_index, es_index_is_empty
-from .loader.es_index import movies_index, persons_index
+from .loader import ESLoader, create_index
+from .loader.indexes.movies_index import movies_index
+from .loader.indexes.persons_index import persons_index
+from .loader.indexes.genres_index import genres_index
 from .loader.utilities import es_backoff
-from .transformer import FilmTransformer, PersonTransformer
+from .transformer.film_transformer import FilmTransformer
+from .transformer.person_transformer import PersonTransformer
+from .transformer.genre_transformer import GenreTransformer
 
 load_dotenv()
 
@@ -22,7 +26,8 @@ GENRE_ES_INDEX = environ.get('GENRE_ES_INDEX')
 
 TRANSFORMER_FOR_INDEX = {
     FILM_ES_INDEX: FilmTransformer,
-    PERSON_ES_INDEX: PersonTransformer
+    PERSON_ES_INDEX: PersonTransformer,
+    GENRE_ES_INDEX: GenreTransformer
 }
 
 TIME_TO_SLEEP = int(environ.get('TIME_TO_SLEEP'))
@@ -74,6 +79,8 @@ if __name__ == '__main__':
     time.sleep(20)
     create_index('movies', movies_index)
     create_index('persons', persons_index)
+    create_index('genres', genres_index)
+
     with open_postgresql_db(dsl) as conn:
         while True:
             for index in INDEX_AND_TABLES.keys():

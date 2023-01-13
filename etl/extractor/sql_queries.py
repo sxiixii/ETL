@@ -30,7 +30,7 @@ BASE_SELECT = '''SELECT
 
 INDEX_AND_TABLES = {
     FILM_ES_INDEX: {
-            'persons': BASE_SELECT + '''FROM content.person p
+        'persons': BASE_SELECT + '''FROM content.person p
                                                          LEFT JOIN content.person_film_work pfw ON pfw.person_id = p.id
                                                          LEFT JOIN content.film_work fw ON fw.id = pfw.film_work_id
                                                          LEFT JOIN content.genre_film_work gfw ON gfw.film_work_id = fw.id
@@ -38,7 +38,7 @@ INDEX_AND_TABLES = {
                                                          WHERE p.modified %s
                                                          GROUP BY fw.id
                                                          ORDER BY fw.modified;''',
-            'films': BASE_SELECT + '''FROM content.film_work fw
+        'films': BASE_SELECT + '''FROM content.film_work fw
                                                        LEFT JOIN content.person_film_work pfw ON pfw.film_work_id = fw.id
                                                        LEFT JOIN content.person p ON p.id = pfw.person_id
                                                        LEFT JOIN content.genre_film_work gfw ON gfw.film_work_id = fw.id
@@ -46,7 +46,7 @@ INDEX_AND_TABLES = {
                                                        WHERE fw.modified %s
                                                        GROUP BY fw.id
                                                        ORDER BY fw.modified;''',
-            'genres': BASE_SELECT + '''FROM content.genre g
+        'genres': BASE_SELECT + '''FROM content.genre g
                                                         LEFT JOIN content.genre_film_work gfw ON gfw.genre_id = g.id
                                                         LEFT JOIN content.film_work fw ON fw.id = gfw.film_work_id
                                                         LEFT JOIN content.person_film_work pfw ON pfw.film_work_id = fw.id
@@ -57,7 +57,7 @@ INDEX_AND_TABLES = {
     },
 
     PERSON_ES_INDEX: {
-            'persons': '''SELECT
+        'persons': '''SELECT
                             p.id as person_id,
                             p.full_name,
                             pfw.role,
@@ -67,6 +67,19 @@ INDEX_AND_TABLES = {
                         WHERE p.modified %s
                         GROUP BY pfw.role, p.id, p.full_name
                         ORDER BY p.id;'''
-    }
+    },
+
+    GENRE_ES_INDEX: {
+        'genres': '''SELECT
+                            g.id as genre_id,
+                            g.name,
+                            g.description,
+                            array_agg(DISTINCT gfw.film_work_id) AS film_ids
+                        FROM content.genre g
+                        LEFT JOIN content.genre_film_work gfw ON g.id = gfw.genre_id
+                        WHERE g.modified %s
+                        GROUP BY g.id, g.name
+                        ORDER BY g.id;'''
+    },
 
 }
