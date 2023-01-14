@@ -1,4 +1,3 @@
-from typing import List, Any
 from uuid import UUID
 
 from pydantic import BaseModel

@@ -8,8 +8,6 @@ from psycopg2.extensions import connection as postgres_connection
 from psycopg2.extras import DictCursor
 from storage import State
 
-from .utilities import pg_backoff
-
 load_dotenv()
 dsl = {
     'dbname': environ.get('POSTGRES_DB'),

@@ -7,16 +7,16 @@ from etl_logger import log
 from psycopg2.extensions import connection as postgres_connection
 from storage import JsonFileStorage, State
 
-from .extractor import PostgresExtractor, dsl, open_postgresql_db, INDEX_AND_TABLES
+from .extractor import INDEX_AND_TABLES, PostgresExtractor, dsl, open_postgresql_db
 from .extractor.utilities import pg_backoff
 from .loader import ESLoader, create_index
+from .loader.indexes.genres_index import genres_index
 from .loader.indexes.movies_index import movies_index
 from .loader.indexes.persons_index import persons_index
-from .loader.indexes.genres_index import genres_index
 from .loader.utilities import es_backoff
 from .transformer.film_transformer import FilmTransformer
-from .transformer.person_transformer import PersonTransformer
 from .transformer.genre_transformer import GenreTransformer
+from .transformer.person_transformer import PersonTransformer
 
 load_dotenv()
 
