@@ -49,7 +49,8 @@ movies_index = {
                 "type": "float"
               },
               "genre": {
-                "type": "keyword"
+                "type": "text",
+                "analyzer": "ru_en"
               },
               "title": {
                 "type": "text",
