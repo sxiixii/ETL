@@ -58,15 +58,21 @@ INDEX_AND_TABLES = {
 
     PERSON_ES_INDEX: {
         'persons': '''SELECT
-                            p.id as person_id,
-                            p.full_name,
-                            pfw.role,
-                            array_agg(DISTINCT pfw.film_work_id) AS film_ids
-                        FROM content.person p
-                        LEFT JOIN content.person_film_work pfw ON p.id = pfw.person_id
-                        WHERE p.modified %s
-                        GROUP BY pfw.role, p.id, p.full_name
-                        ORDER BY p.id;'''
+                        p.id as person_id,
+                        p.full_name,
+                        COALESCE (json_agg(
+                                           DISTINCT jsonb_build_object(
+                                               'role', pfw.role,
+                                               'film_id', pfw.film_work_id
+                                           )
+                                           ) FILTER (WHERE pfw.id is not null),
+                                           '[]'
+                                       ) as films
+                    FROM content.person p
+                    LEFT JOIN content.person_film_work pfw ON p.id = pfw.person_id
+                    WHERE p.modified %s
+                    GROUP BY p.id, p.full_name
+                    ORDER BY p.id;'''
     },
 
     GENRE_ES_INDEX: {

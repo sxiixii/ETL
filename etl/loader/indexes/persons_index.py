@@ -45,7 +45,7 @@ persons_index = {
             "id": {
                 "type": "keyword"
             },
-            "full_name": {
+            "name": {
                 "type": "text",
                 "analyzer": "ru_en",
                 "fields": {
@@ -54,11 +54,18 @@ persons_index = {
                     }
                 }
             },
-            "role": {
-                "type": "keyword"
-            },
-            "film_ids": {
-                "type": "keyword",
+            "roles": {
+                "type": "nested",
+                "dynamic": "strict",
+                "properties": {
+                    "role": {
+                        "type": "keyword"
+                    },
+                    "film_ids": {
+                        "type": "text",
+                        "analyzer": "ru_en"
+                    }
+                }
             }
         }
     }
