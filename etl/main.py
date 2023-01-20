@@ -76,7 +76,6 @@ def run_pipeline(connection, es_index):
 
 
 if __name__ == '__main__':
-    time.sleep(20)
     create_index('movies', movies_index)
     create_index('persons', persons_index)
     create_index('genres', genres_index)
